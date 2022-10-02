@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.command.argument.EntityAnchorArgumentType
 import net.minecraft.command.argument.Vec3ArgumentType
+import net.minecraft.entity.EntityPose
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
@@ -114,7 +115,7 @@ object BlockScreenshot : ModInitializer {
         player.teleport(
             world,
             centerVec.x + vec.x * 1.5,
-            centerVec.y + vec.y * 1.5,
+            centerVec.y - player.getEyeHeight(EntityPose.STANDING) + vec.y * 1.5,
             centerVec.z + vec.z * 1.5,
             yaw.toFloat(),
             pitch.toFloat()
