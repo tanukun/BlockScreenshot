@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "blockscreenshot",
+  "version": "${version}",
+  "name": "BlockScreenshot",
+  "description": "",
+  "authors": [
+    "tanukun"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/blockscreenshot/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.github.tanukun.blockscreenshot.client.BlockScreenshotClient"
+      }
+    ],
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.github.tanukun.blockscreenshot.BlockScreenshot"
+      }
+    ]
+  },
+  "mixins": [
+    "blockscreenshot.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "minecraft": "1.19.2",
+    "fabric-language-kotlin": ">=1.8.3+kotlin.1.7.10"
+  }
+}
