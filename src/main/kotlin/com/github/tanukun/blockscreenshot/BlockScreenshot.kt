@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.block.Block
 import net.minecraft.command.argument.EntityAnchorArgumentType
 import net.minecraft.command.argument.Vec3ArgumentType
 import net.minecraft.entity.EntityPose
@@ -47,8 +48,12 @@ object BlockScreenshot : ModInitializer {
                                 // For versions below 1.19, replace "Text.literal" with "new LiteralText".
                                 //context.getSource().sendMessage(Text.literal("Called /foo with no arguments"));
                                 context.source.player?.let { player ->
+                                    // ランダムにブロックを選択
+                                    val randomBlock = Registry.BLOCK[Random.nextInt(Registry.BLOCK.size())]
+                                    // 中心座標
                                     val center = Vec3ArgumentType.getVec3(context, "pos")
-                                    replaceAndTakeScreenshot(player, center)
+                                    // スクショを撮る
+                                    replaceAndTakeScreenshot(player, center, randomBlock)
                                 }
                                 1
                             })
@@ -73,8 +78,21 @@ object BlockScreenshot : ModInitializer {
                                         val center = Vec3ArgumentType.getVec3(context, "pos")
                                         // タスクを作成する
                                         val task = object : TimerTask() {
+                                            /** すべてのブロックの種類数 */
+                                            val size = Registry.BLOCK.size()
+
+                                            /** 現在のブロックID */
+                                            var index = 0
+
                                             override fun run() {
-                                                replaceAndTakeScreenshot(player, center)
+                                                // 順番にブロックを選択
+                                                if (++index >= size) {
+                                                    index = 0
+                                                }
+                                                val block = Registry.BLOCK[index]
+
+                                                // スクショを撮る
+                                                replaceAndTakeScreenshot(player, center, block)
                                             }
                                         }
                                         // タスクを登録する
@@ -89,7 +107,7 @@ object BlockScreenshot : ModInitializer {
         })
     }
 
-    private fun replaceAndTakeScreenshot(player: ServerPlayerEntity, center: Vec3d) {
+    private fun replaceAndTakeScreenshot(player: ServerPlayerEntity, center: Vec3d, randomBlock: Block) {
         // ブロックを置く座標
         val centerBlockPos = BlockPos(center)
         val centerVec =
@@ -97,8 +115,6 @@ object BlockScreenshot : ModInitializer {
 
         // ワールド
         val world = player.getWorld()
-        // ランダムにブロックを選択
-        val randomBlock = Registry.BLOCK[Random.nextInt(Registry.BLOCK.size())]
         // ランダムなブロックを設置
         world.setBlockState(centerBlockPos, randomBlock.defaultState)
         // ランダムな向き
