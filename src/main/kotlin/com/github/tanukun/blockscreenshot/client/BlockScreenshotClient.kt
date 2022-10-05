@@ -43,6 +43,13 @@ object BlockScreenshotClient : ClientModInitializer {
         }
     }
 
+    /**
+     * スクリーンショットを撮る
+     * @param directory スクリーンショットを保存するフォルダ
+     * @param width スクリーンショットの幅
+     * @param height スクリーンショットの高さ
+     * @return スクリーンショットを撮影したときのチャットメッセージ
+     */
     private fun MinecraftClient.takeScreenshot(directory: File, width: Int, height: Int): Text? {
         val window = this.window
         val player = this.player
